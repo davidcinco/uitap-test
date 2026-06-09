@@ -28,16 +28,16 @@ test.describe('Sample App Testing', () => {
     });
 
     //Test case to verify login functionality with empty username - Negative Path case
-    test('Login with invalid credentials', async ({page}) => {
+    test('Login with empty username credentials', async ({page}) => {
         //inserting invalid username and password
-        await page.locator('input[name="UserName"]').fill('invaliduser');
-        await page.locator('input[name="Password"]').fill('invalidpwd');
+        // await page.locator('input[name="UserName"]').fill('');
+        await page.locator('input[name="Password"]').fill('pwd');
 
         //Click on Login button
         await page.locator('#login').click();
 
         //Assert that the error message is visible after login
-        await expect(page.locator('#loginstatus')).toHaveText('Invalid username or password.');
+        await expect(page.locator('#loginstatus')).toHaveText('Invalid username/password');
     });
 
 });
