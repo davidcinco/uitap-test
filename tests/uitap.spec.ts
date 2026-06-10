@@ -1,39 +1,44 @@
 import {test, expect} from '@playwright/test';
+import { SampleFormPage } from '../src/pages/SampleFormPage';
 
 //Hook to navigate to the home page before each test
 test.beforeEach(async ({ page }) => {
   await page.goto('http://www.uitestingplayground.com/');
+  await page.getByRole('link', {name: 'Sample App'}).click();
 });
 
-
 //Test suite for UITap sample app
-test.describe('Sample App Testing', () => {
-
-    test.beforeEach(async ({ page }) => {
-        //Click on Sample App link to navigate to the UITap sample app each time before running the test cases from UITap test suite
-        await page.getByRole('link', {name: 'Sample App'}).click();
-    });
+test.describe('Sample App Testing Log In', () => {
 
     //Test case to verify login functionality with valid credentials - Happy Path case
-    test('Login with valid credentials', async ({ page }) => {
-        //inserting valid username and password
-        await page.locator('input[name="UserName"]').fill('testuser');
-        await page.locator('input[name="Password"]').fill('pwd');
-        //Click on Login button
-        await page.locator('#login').click();
+    test('Log In with valid credentials', async ({ page }) => {
+        //Using POM class to perform login action
+        const sampleFormPage = new SampleFormPage(page);
+        await sampleFormPage.sampleFormLogin('testuser', 'pwd');
         //Assert that the success message is visible after login
-        await expect(page.locator('#loginstatus')).toHaveText('Welcome, testuser!');
+        await expect(sampleFormPage.loginStatus).toHaveText('Welcome, testuser!');
     });
 
     //Test case to verify login functionality with empty username - Negative Path case
-    test('Login with empty username credentials', async ({ page }) => {
-        //inserting invalid username and password
-        // await page.locator('input[name="UserName"]').fill('');
-        await page.locator('input[name="Password"]').fill('pwd');
-        //Click on Login button
-        await page.locator('#login').click();
+    test('Log In with empty username credentials', async ({ page }) => {
+        //Using POM class to perform login action
+        const sampleFormPage = new SampleFormPage(page);
+        await sampleFormPage.sampleFormLogin('', 'pwd');
         //Assert that the error message is visible after login
-        await expect(page.locator('#loginstatus')).toHaveText('Invalid username/password');
+        await expect(sampleFormPage.loginStatus).toHaveText('Invalid username/password');
     });
+});
 
+//Test suite for UITap sample app - Sign Out functionality
+test.describe('Sample App Sign Out Testing', () => {
+
+    test("Sign Out after successful login", async ({ page }) => {
+        //Using POM class to perform login action
+        const sampleFormPage = new SampleFormPage(page);
+        await sampleFormPage.sampleFormLogin('testuser', 'pwd');
+        //Perform Sign Out action
+        await sampleFormPage.sampleFormSignOut();
+        //Assert that the user is signed out successfully
+        await expect(sampleFormPage.loginStatus).toHaveText('User logged out.');
+    });
 });
