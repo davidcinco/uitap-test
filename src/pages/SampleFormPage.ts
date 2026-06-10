@@ -28,6 +28,7 @@ export class SampleFormPage {
 
     }
 
+    //Method to perfom a Sign Out / Log Out action on sample form page
     async sampleFormSignOut(){
         //Click on Sign Out button
         if (await this.loginButton.textContent() === 'Log Out') {
