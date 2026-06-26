@@ -10,7 +10,12 @@ export class VerifyPage{
         this.welcomeText = page.locator('div.bg-primary');
     };
 
-    async expectWelcomeTextToContain(expectedText: string){
+    async textToContain(expectedText: string){
         await expect(this.welcomeText).toContainText(expectedText);
     } 
+
+    async incorrectTextToContain(expectedText: string){
+        await expect(this.welcomeText).not.toContainText(expectedText);
+    } 
+
 }
